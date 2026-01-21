@@ -30,7 +30,10 @@
     <header>
         <h1>Name</h1>
         <button>Cart</button>
+        <span id="productOnCart">0</span>
     </header>
+
+
     <div class="container">
         <div class="modal-card" id="modal">
             <div class="modal-content">
@@ -48,6 +51,7 @@
         let modal = document.getElementById('modal')
         let produtoSelecionado = null
         let listaDeProdutos = []
+        let listaDeProdutosOnCart = []
 
         function showModal() {
             modal.style.display = 'flex'
@@ -106,13 +110,30 @@
                         "Content-Type": "application/json; charset=UTF-8"
                     }
                 })
-
+                await fetchCartItems()
                 closeModal()
-                
+
             } catch (err) {
                 console.log(err)
             }
 
+        }
+
+        async function fetchCartItems() {
+            let res = await fetch('http://localhost:3000/cart')
+            let data = await res.json()
+            listaDeProdutosOnCart = data
+            showSpanValue()
+        }
+
+
+        function showSpanValue() {
+            let span = document.getElementById('productOnCart')
+            let total = 0
+            listaDeProdutosOnCart.forEach(product => {
+                total += product.quantity
+            })
+            span.innerText = total
         }
 
 
@@ -120,8 +141,9 @@
 
 
 
-
         fetchData()
+        fetchCartItems()
+
 
 
 
