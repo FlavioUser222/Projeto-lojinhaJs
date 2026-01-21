@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .modal-card {
+        display: none;
+        width: 100%;
+        background-color: #2e2e2e33;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        width: 400px;
+        height: 400px;
+    }
+</style>
+
+<body>
+    <header>
+        <h1>Name</h1>
+        <button>Cart</button>
+    </header>
+    <div class="container">
+        <div class="modal-card" id="modal">
+            <div class="modal-content">
+                <h1>Modal</h1>
+                <button onclick="closeModal()">Enviar ao carrinho</button>
+            </div>
+        </div>
+
+        <div class="card-container" id="card_container">
+
+        </div>
+    </div>
+
+    <script>
+        let modal = document.getElementById('modal')
+        let listaDeProdutos = []
+
+        function showModal() {
+            modal.style.display = 'flex'
+        }
+
+        function closeModal() {
+            modal.style.display = 'none'
+        }
+
+
+        async function fetchData() {
+            try {
+                let res = await fetch('http://localhost:3000/products')
+                let data = await res.json()
+                listaDeProdutos = data
+                renderCards()
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        function renderCards() {
+            let card_container = document.getElementById('card_container')
+
+            listaDeProdutos.forEach(produto => {
+                let divCard = document.createElement('div')
+                divCard.className = 'card'
+                divCard.onclick = showModal
+                divCard.innerHTML = `
+                <div class="card-img">
+                    ${produto.img}
+                </div>
+                <div class="card-content">
+                    <h1>${produto.nome}</h1>
+                    <span>${produto.valor}</span>
+                </div>`
+
+                card_container.appendChild(divCard)
+            })
+        }
+
+
+
+
+
+
+        fetchData()
+
+
+
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>
